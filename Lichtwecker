@@ -1,0 +1,144 @@
+blueprint:
+  name: Lichtwecker by SmartHome for Dummies
+  description: >
+    Lichtwecker - Licht wird über einen definierten Zeitraum vom Min Helligkeitswert bis Max Helligkeitswert hoch gedimmt.
+    Das Ausschaltten des Lichts  deaktiviert den Lichtwecker.
+    Es werden zwei Helfer benöttigt.
+    - Ein input_datetime -> Weckzeit
+    - Ein input_boolean -> Zum aktivieren/ deaktivieren des Lichttweckers
+    Die Zeit des Lichtweckers erechnet sich aus der Max Helligkeit - Min Helligkeit und der Verzögerung zwischen der Helligkeit Anpassung.
+    Beispiel. Das Licht soll startend mit der Helligkeit 10 auf 200 in 30 min gedimmt werden. 200 - 20 = 180
+    30*60 / 180  = 10. Dies  ergibt eine Verzögerung von 10s
+  domain: automation
+  input:
+    light:
+      name: Licht
+      description: Licht Entität 
+      selector:
+        entity:
+          domain: light
+    color_temperature:
+      name: Licht Temperatur des Lichtweckers
+      description:  The coolest color your bulbs will be set to
+      default: 250
+      selector:
+        color_temp:
+            min_mireds: 153
+            max_mireds: 500
+    min_brightness:
+      name: Min Helligkeit
+      description: Start Helligkeit für den Lichtwecker (Wert zwischen 0-255)
+      default: 20
+      selector:
+        number:
+          min: 0.0
+          max: 255.0
+          mode: slider
+          step: 1.0
+    max_brightness:
+      name: Max Helligkeit
+      description: Maximale Helligkeit die nach Ablauf dees Lichtweckers erreicht werden soll. (Wert zwischen 0-255) Muss größer sein als die Min Helligkeit.
+      default: 200
+      selector:
+        number:
+          min: 0.0
+          max: 255.0
+          mode: slider
+          step: 1.0
+    time:
+      name: Weckzeit
+      description: Uhrzeit Helfer - welche die Startzeit des Lichtweckers vorgibt.
+      selector:
+        entity:
+          domain: input_datetime
+    on_off:
+      name: Lichtwecker aktiv
+      description: Umschalter Helfer - Aktiviert/ deaktiviert den Lichtwecker
+      selector:
+        entity:
+          domain: input_boolean
+    delay:
+      name: Verzögerung
+      description: Zeit zwischen den Dimmschritten +1
+      default: 1
+      selector:
+        number:
+          min: 1
+          max: 59
+          mode: slider
+          step: 1.0
+          unit_of_measurement: "s"
+    weekday:
+      name: Wochentage
+      description: Wochentage an deneen der Lichtweecker aktiv sein soll.
+      default: [mon, tue, wed, thu, fri, sat, sun]
+      selector:
+        select:
+          options:
+          - label: Montag
+            value: mon
+          - label: Dienstag
+            value: tue
+          - label: Mittwoch
+            value: wed
+          - label: Donnerstag
+            value: thu
+          - label: Freitag
+            value: fri
+          - label: Samstag
+            value: sat
+          - label: Sonntag
+            value: sun
+          custom_value: false
+          multiple: true
+
+mode: restart
+max_exceeded: silent
+
+trigger:
+  - platform: time
+    at: !input time
+    id: start
+  - platform: state
+    entity_id: !input light
+    id: ende
+    from: "on"
+    to: "off"
+condition:
+  - condition: state
+    entity_id: !input on_off
+    state: "on"
+  - condition: time
+    weekday: !input weekday
+action:
+  - variables:
+      light_entity: !input light
+      max_brightness: !input max_brightness
+      min_brightness: !input min_brightness
+      current_brightness: "{{ state_attr(light_entity, 'brightness') }}"
+      repeat_number: "{{max_brightness - min_brightness}}"
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: start
+        sequence:
+          - service: light.turn_on
+            data:
+              brightness: !input min_brightness
+              color_temp: !input color_temperature
+            target:
+              entity_id:
+                - !input light
+          - repeat:
+              count: "{{repeat_number | int}}"
+              sequence:
+                - service: light.turn_on
+                  data:
+                    brightness_step: 1
+                  target:
+                    entity_id: !input light
+                - delay:
+                    hours: 0
+                    minutes: 0
+                    seconds: !input delay
+                    milliseconds: 0
