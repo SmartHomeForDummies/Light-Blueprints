@@ -19,7 +19,6 @@ blueprint:
           domain: light
     color_temperature:
       name: Licht Temperatur des Lichtweckers
-      description:  The coolest color your bulbs will be set to
       default: 250
       selector:
         color_temp:
