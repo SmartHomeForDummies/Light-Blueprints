@@ -59,7 +59,7 @@ blueprint:
           max: 100
           mode: slider
           step: 1.0
-          unit_of_measurement: "s"
+          unit_of_measurement: "%"
     time:
       name: Weckzeit
       description: Uhrzeit Helfer - welche die Startzeit des Lichtweckers vorgibt.
