@@ -1,5 +1,5 @@
 blueprint:
-  name: Lichtwecker mit Farbtemperatur und Datum & Uhrzeit Vorgabeby SmartHome for Dummies
+  name: Lichtwecker mit Farbtemperatur und Datum & Uhrzeit Vorgabe by SmartHome for Dummies
   description: >
     Lichtwecker - Licht wird über einen definierten Zeitraum vom Start Helligkeitswert bis Ziel Helligkeitswert hoch gedimmt.
     Eine gleichmässige Anpasung der Farbtemperatur erfolgt ebenfalls über die Zeit vom Start Wert zum Ziewert der Farbtemperatur.
