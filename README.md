@@ -36,6 +36,7 @@
 
 ### [SmarHome for Dummies Community Diskussion](https://community.smarthome-for-dummies.de/viewtopic.php?t=689)
 
+-----
 [![Donate with PayPal](https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-200px.png)
 ](https://community.smarthome-for-dummies.de/donate)
 
