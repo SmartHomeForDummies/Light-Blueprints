@@ -37,8 +37,10 @@
 [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2FSmartHomeForDummies%2FLight-Blueprints%2Fblob%2Fmain%2FLichtwecker_mit_Farbtemperatur_und_Sensor_als_Weckzeit.yaml)
 
 
-### [SmarHome for Dummies Community Diskussion](https://community.smarthome-for-dummies.de/viewtopic.php?t=689)
+### SmarHome for Dummies Community Diskussion
 
+[![SmarHome for Dummies Community Diskussion](https://community.smarthome-for-dummies.de/styles/black_darkblue/theme/images/logo_hd.png)
+](https://community.smarthome-for-dummies.de/viewtopic.php?t=689)
 -----
 [![Donate with PayPal](https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-200px.png)
 ](https://community.smarthome-for-dummies.de/donate)
