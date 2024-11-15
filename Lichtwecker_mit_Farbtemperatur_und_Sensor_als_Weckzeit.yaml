@@ -13,18 +13,20 @@ blueprint:
   input:
     time:
       name: Weckzeit
-      description: Sesnor mit device class timestamp - Datum & Uhrzeit start des Lichtweckers      
+      description: Sesnor mit device class timestamp - Datum & Uhrzeit start des Lichtweckers
       selector:
         entity:
-          domain: sensor
-          device_class: timestamp
+          filter:
+            domain: sensor
+            device_class: timestamp
       default: []
     time2:
       name: Weckzeit
-      description: Uhrzeit & Datum Helfer - Datum & Uhrzeit start des Lichtweckers      
+      description: Uhrzeit & Datum Helfer - Datum & Uhrzeit start des Lichtweckers
       selector:
         entity:
-          domain: input_datetime
+          filter:
+            domain: input_datetime
       default: []
     duration:
       name: Dauer
@@ -42,28 +44,29 @@ blueprint:
       description: Lampe die als Lichtwecker verwendet werden soll
       selector:
         entity:
-          domain: light
+          filter:
+            domain: light
     use_temperature:
       name: Farbtemperatur verwenden?
       description: Bei Lichtern ohne Farbtemperatur kann die Verwendung der Farbttemperatur deaktieviiert werden.
       selector:
-        boolean: 
+        boolean:
       default: false
     start_color_temperature:
       name: Start Farbtemperatur
       default: 450
       selector:
         color_temp:
-            min_mireds: 153
-            max_mireds: 500
+          min_mireds: 153
+          max_mireds: 500
     end_color_temperature:
       name: Ziel Farbtemperatur
       description: Farbtemperatur die nach Ablauf des Lichtweckers erreicht werden soll. Start = Ziel -> Konstante Farbtemperatur über die gesamte Zeit.
       default: 153
       selector:
         color_temp:
-            min_mireds: 153
-            max_mireds: 500 
+          min_mireds: 153
+          max_mireds: 500
     start_brightness:
       name: Start Helligkeit
       description: Start Helligkeit für den Lichtwecker
@@ -90,14 +93,14 @@ blueprint:
 mode: restart
 max_exceeded: silent
 
-trigger:
-  - platform: time
+triggers:
+  - trigger: time
     at: !input time
     id: start
-  - platform: time
+  - trigger: time
     at: !input time2
     id: start
-  - platform: state
+  - trigger: state
     entity_id: !input light
     id: ende
     from: "on"
@@ -127,7 +130,7 @@ action:
                 value_template: |
                   {{ use_temperature == true }}
             then:
-              - service: light.turn_on
+              - action: light.turn_on
                 data:
                   brightness_pct: !input start_brightness
                   color_temp: !input start_color_temperature
@@ -144,13 +147,13 @@ action:
                         minutes: 0
                         seconds: "{{delay_time | float | round(3)}}"
                         milliseconds: 0
-                    - service: light.turn_on
+                    - action: light.turn_on
                       data:
                         brightness_step_pct: 1
                         color_temp: "{{ (state_attr(light_entity, 'color_temp') - color_teperature_steps) }}"
                       target:
                         entity_id: !input light
-              - service: light.turn_on
+              - action: light.turn_on
                 data:
                   brightness_pct: !input end_brightness
                   color_temp: !input end_color_temperature
@@ -158,7 +161,7 @@ action:
                   entity_id:
                     - !input light
             else:
-              - service: light.turn_on
+              - action: light.turn_on
                 data:
                   brightness_pct: !input start_brightness
                 target:
@@ -174,12 +177,12 @@ action:
                         minutes: 0
                         seconds: "{{delay_time | float | round(3)}}"
                         milliseconds: 0
-                    - service: light.turn_on
+                    - action: light.turn_on
                       data:
                         brightness_step_pct: 1
                       target:
                         entity_id: !input light
-              - service: light.turn_on
+              - action: light.turn_on
                 data:
                   brightness_pct: !input end_brightness
                 target:
